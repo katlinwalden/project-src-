@@ -18,15 +18,17 @@ for i=1:nx+1
 end
 G=transpose(F); %saved in storage for optimizing loops later
     %running actual iterations
-percenterror=1; %predefine for functionality
-s=1;
-while percenterror >=.01
+l=1; %predefine for functionalityones(nx+1,ny+1)
+percenterror=ones(nx+1:ny+1);
+s=ones(nx+1:ny+1);
+while l >=.00001
     for j=1:ny+1 
         if j==1
             u1(:,j)=(m-x).^2.*x; %boundary condition
         elseif j==ny+1
                 u1(:,j)=(m-x).^2.*cos(x/2); %boundary condition
         else
+        end
         for i=1:nx+1
             if i==1
                 u1(i,j)=m*y(j); %boundary condition
@@ -35,9 +37,9 @@ while percenterror >=.01
             else
                 u1(i,j)=.5*(F(i,j)*dx^2*dy^2-u1(i,j-1)-u1(i,j+1)-u1(i-1,j)-u1(i+1,j)); %defnining u1 matrix
             end
-        end
-        percenterror=(u1(i,j)-s)/u1(i,j);    
-        s=u1;
-        end      
+            percenterror=(u1-s)./u1;
+            l=max(max(percenterror));
+            s=u1;
+        end   
     end
 end
